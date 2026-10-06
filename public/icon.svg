@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="50%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+    <linearGradient id="paperGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F3F4F6" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  
+  <!-- Background rounded rectangle -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+  
+  <!-- Note Sheet -->
+  <g filter="url(#dropShadow)">
+    <path d="M140 120 C140 102.3 154.3 88 172 88 L310 88 L380 158 L380 392 C380 409.7 365.7 424 348 424 L172 424 C154.3 424 140 409.7 140 392 Z" fill="url(#paperGrad)"/>
+    <!-- Folded corner -->
+    <path d="M310 88 L310 150 C310 154.4 313.6 158 318 158 L380 158 Z" fill="#E5E7EB"/>
+  </g>
+
+  <!-- Note lines / markdown lines -->
+  <rect x="180" y="160" width="100" height="16" rx="8" fill="#10B981" opacity="0.9"/>
+  <rect x="180" y="200" width="150" height="12" rx="6" fill="#9CA3AF" opacity="0.6"/>
+  <rect x="180" y="226" width="130" height="12" rx="6" fill="#9CA3AF" opacity="0.6"/>
+  <rect x="180" y="252" width="140" height="12" rx="6" fill="#9CA3AF" opacity="0.6"/>
+
+  <!-- E2EE Shield & Lock Badge -->
+  <g transform="translate(240, 260)" filter="url(#dropShadow)">
+    <circle cx="68" cy="68" r="62" fill="#1F2937"/>
+    <circle cx="68" cy="68" r="54" fill="url(#goldGrad)"/>
+    <!-- Lock Icon -->
+    <path d="M68 44 C61.4 44 56 49.4 56 56 L56 64 L52 64 C49.8 64 48 65.8 48 68 L48 88 C48 90.2 49.8 92 52 92 L84 92 C86.2 92 88 90.2 88 88 L88 68 C88 65.8 86.2 64 84 64 L80 64 L80 56 C80 49.4 74.6 44 68 44 Z M68 50 C71.3 50 74 52.7 74 56 L74 64 L62 64 L62 56 C62 52.7 64.7 50 68 50 Z" fill="#111827"/>
+    <circle cx="68" cy="76" r="3.5" fill="#FFFFFF"/>
+  </g>
+</svg>

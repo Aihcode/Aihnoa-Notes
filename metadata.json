@@ -1,0 +1,6 @@
+{
+  "name": "Krypta Notes - Notas Cifradas E2EE & Markdown",
+  "description": "Aplicación de notas local-first estilo Google Keep y Evernote con Markdown, cifrado de extremo a extremo (E2EE), listas de tareas, notas de voz, dibujos y sincronización segura.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
