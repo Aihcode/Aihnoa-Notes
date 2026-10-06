@@ -27,7 +27,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   };
 
   if (!content || content.trim() === '') {
-    return <span className="text-stone-400 dark:text-zinc-500 italic text-sm">Nota vacía</span>;
+    return <span className="text-slate-400 dark:text-slate-500 italic text-sm">Nota vacía</span>;
   }
 
   // Parse markdown line by line or block by block
@@ -46,20 +46,20 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       const header = tableRows[0];
       const body = tableRows.slice(1).filter((r) => !r.every((c) => c.match(/^[:\s-]+$/)));
       elements.push(
-        <div key={`table-${elements.length}`} className="my-3 overflow-x-auto rounded-lg border border-stone-200 dark:border-zinc-800">
+        <div key={`table-${elements.length}`} className="my-3 overflow-x-auto rounded-xl border border-slate-200 dark:border-blue-950/80 shadow-sm">
           <table className="w-full text-left text-xs border-collapse">
-            <thead className="bg-stone-100 dark:bg-zinc-800/80 font-semibold text-stone-700 dark:text-stone-200">
+            <thead className="bg-slate-100 dark:bg-slate-800/80 font-semibold text-slate-800 dark:text-slate-200">
               <tr>
                 {header.map((col, ci) => (
-                  <th key={ci} className="px-3 py-2 border-b border-stone-200 dark:border-zinc-800">
+                  <th key={ci} className="px-3 py-2 border-b border-slate-200 dark:border-blue-950/80">
                     {renderInline(col.trim())}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-200 dark:divide-zinc-800 text-stone-600 dark:text-stone-300">
+            <tbody className="divide-y divide-slate-200 dark:divide-blue-950/60 text-slate-700 dark:text-slate-300">
               {body.map((row, ri) => (
-                <tr key={ri} className="hover:bg-stone-50 dark:hover:bg-zinc-800/40">
+                <tr key={ri} className="hover:bg-slate-50 dark:hover:bg-blue-950/30">
                   {row.map((col, ci) => (
                     <td key={ci} className="px-3 py-2">
                       {renderInline(col.trim())}
@@ -77,11 +77,8 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   };
 
   const renderInline = (text: string): React.ReactNode => {
-    // 1. Highlight ==text==
     let processedText = text;
 
-    // Split tokens for inline code, bold, italic, strikethrough, highlights, hashtags, and links
-    // Regex for inline patterns
     const inlineRegex = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*|~~[^~]+~~|==[^=]+==|\[([^\]]+)\]\(([^)]+)\)|#[\w\u00C0-\u017F]+)/g;
     const parts: React.ReactNode[] = [];
     let lastIdx = 0;
@@ -97,32 +94,32 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         parts.push(
           <code
             key={match.index}
-            className="px-1.5 py-0.5 mx-0.5 rounded bg-stone-200/80 dark:bg-zinc-800 text-emerald-700 dark:text-emerald-400 text-[0.85em] font-mono"
+            className="px-1.5 py-0.5 mx-0.5 rounded bg-blue-100/70 dark:bg-blue-950/80 text-blue-700 dark:text-cyan-300 text-[0.85em] font-mono border border-blue-200/50 dark:border-blue-800/40"
           >
             {token.slice(1, -1)}
           </code>
         );
       } else if (token.startsWith('**') && token.endsWith('**')) {
         parts.push(
-          <strong key={match.index} className="font-bold text-stone-900 dark:text-stone-100">
+          <strong key={match.index} className="font-bold text-slate-900 dark:text-white">
             {renderInline(token.slice(2, -2))}
           </strong>
         );
       } else if (token.startsWith('*') && token.endsWith('*')) {
         parts.push(
-          <em key={match.index} className="italic text-stone-800 dark:text-stone-200">
+          <em key={match.index} className="italic text-slate-800 dark:text-slate-200">
             {renderInline(token.slice(1, -1))}
           </em>
         );
       } else if (token.startsWith('~~') && token.endsWith('~~')) {
         parts.push(
-          <del key={match.index} className="line-through text-stone-400 dark:text-zinc-500">
+          <del key={match.index} className="line-through text-slate-400 dark:text-slate-500">
             {renderInline(token.slice(2, -2))}
           </del>
         );
       } else if (token.startsWith('==') && token.endsWith('==')) {
         parts.push(
-          <mark key={match.index} className="bg-amber-200/80 dark:bg-amber-500/30 text-stone-900 dark:text-amber-200 px-1 py-0.2 rounded">
+          <mark key={match.index} className="bg-blue-200/80 dark:bg-cyan-500/30 text-blue-900 dark:text-cyan-200 px-1 py-0.2 rounded font-medium">
             {renderInline(token.slice(2, -2))}
           </mark>
         );
@@ -133,7 +130,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             href={match[3]}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-emerald-600 dark:text-emerald-400 hover:underline inline-flex items-center gap-0.5"
+            className="text-blue-600 dark:text-cyan-400 hover:underline inline-flex items-center gap-0.5 font-medium"
             onClick={(e) => e.stopPropagation()}
           >
             {match[2]}
@@ -149,7 +146,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
               e.stopPropagation();
               onTagClick?.(tag);
             }}
-            className="inline-flex items-center px-1.5 py-0.2 text-[0.85em] rounded-full font-medium bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 transition"
+            className="inline-flex items-center px-2 py-0.5 text-[0.85em] rounded-full font-semibold bg-blue-100/90 dark:bg-blue-950 text-blue-700 dark:text-cyan-300 hover:bg-blue-200 transition border border-blue-200 dark:border-blue-800/60"
           >
             #{tag}
           </button>
@@ -180,22 +177,22 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         elements.push(
           <div
             key={`code-${elements.length}`}
-            className="my-3 rounded-lg overflow-hidden bg-stone-900 text-stone-100 dark:bg-zinc-950 border border-stone-800"
+            className="my-3 rounded-2xl overflow-hidden bg-[#070B14] text-slate-100 border border-blue-950 shadow-md"
           >
-            <div className="flex items-center justify-between px-3 py-1.5 bg-stone-800/80 dark:bg-zinc-900 text-xs text-stone-400">
-              <span className="font-mono text-emerald-400">{codeLang || 'código'}</span>
+            <div className="flex items-center justify-between px-3.5 py-1.5 bg-slate-900/90 text-xs text-slate-400 border-b border-blue-950">
+              <span className="font-mono text-cyan-400 font-semibold">{codeLang || 'tecnología / código'}</span>
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   copyCode(codeText, currentIndex);
                 }}
-                className="flex items-center gap-1 hover:text-stone-200 transition px-2 py-0.5 rounded hover:bg-stone-700/50"
+                className="flex items-center gap-1 hover:text-white transition px-2 py-0.5 rounded-lg hover:bg-blue-900/40 text-slate-300"
               >
                 {copiedIndex === currentIndex ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-emerald-400">Copiado</span>
+                    <Check className="w-3.5 h-3.5 text-cyan-400" />
+                    <span className="text-cyan-400">Copiado</span>
                   </>
                 ) : (
                   <>
@@ -205,7 +202,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                 )}
               </button>
             </div>
-            <pre className="p-3 text-xs overflow-x-auto font-mono leading-relaxed selection:bg-emerald-800 selection:text-white">
+            <pre className="p-3.5 text-xs overflow-x-auto font-mono leading-relaxed selection:bg-blue-800 selection:text-white">
               <code>{codeText}</code>
             </pre>
           </div>
@@ -248,7 +245,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     // Horizontal rule
     if (line.trim() === '---' || line.trim() === '***' || line.trim() === '___') {
       elements.push(
-        <hr key={`hr-${i}`} className="my-3 border-stone-200 dark:border-zinc-800" />
+        <hr key={`hr-${i}`} className="my-3 border-slate-200 dark:border-blue-950" />
       );
       continue;
     }
@@ -256,7 +253,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     // Headings
     if (line.startsWith('# ')) {
       elements.push(
-        <h1 key={`h1-${i}`} className={`font-bold text-stone-900 dark:text-white my-2 ${compact ? 'text-base' : 'text-xl'}`}>
+        <h1 key={`h1-${i}`} className={`font-bold text-slate-900 dark:text-white my-2 ${compact ? 'text-base' : 'text-xl'}`}>
           {renderInline(line.slice(2))}
         </h1>
       );
@@ -264,7 +261,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     }
     if (line.startsWith('## ')) {
       elements.push(
-        <h2 key={`h2-${i}`} className={`font-bold text-stone-900 dark:text-stone-100 my-1.5 ${compact ? 'text-sm' : 'text-lg'}`}>
+        <h2 key={`h2-${i}`} className={`font-bold text-slate-900 dark:text-slate-100 my-1.5 ${compact ? 'text-sm' : 'text-lg'}`}>
           {renderInline(line.slice(3))}
         </h2>
       );
@@ -272,7 +269,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     }
     if (line.startsWith('### ')) {
       elements.push(
-        <h3 key={`h3-${i}`} className={`font-semibold text-stone-800 dark:text-stone-200 my-1 ${compact ? 'text-xs' : 'text-base'}`}>
+        <h3 key={`h3-${i}`} className={`font-semibold text-slate-800 dark:text-slate-200 my-1 ${compact ? 'text-xs' : 'text-base'}`}>
           {renderInline(line.slice(4))}
         </h3>
       );
@@ -280,7 +277,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     }
     if (line.startsWith('#### ')) {
       elements.push(
-        <h4 key={`h4-${i}`} className="font-semibold text-stone-700 dark:text-stone-300 my-1 text-sm">
+        <h4 key={`h4-${i}`} className="font-semibold text-slate-700 dark:text-slate-300 my-1 text-sm">
           {renderInline(line.slice(5))}
         </h4>
       );
@@ -292,7 +289,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       elements.push(
         <blockquote
           key={`quote-${i}`}
-          className="border-l-4 border-emerald-500 pl-3 py-1 my-1.5 text-stone-600 dark:text-stone-400 italic text-sm bg-stone-50/50 dark:bg-zinc-800/30 rounded-r"
+          className="border-l-4 border-blue-500 pl-3.5 py-1.5 my-2 text-slate-700 dark:text-slate-300 italic text-sm bg-blue-50/50 dark:bg-blue-950/20 rounded-r-xl"
         >
           {renderInline(line.slice(2))}
         </blockquote>
@@ -317,13 +314,13 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
               e.stopPropagation();
               onToggleTask?.(currentTaskIndex, isChecked);
             }}
-            className="mt-1 h-4 w-4 rounded border-stone-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer transition"
+            className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer transition"
           />
           <span
             className={`flex-1 transition ${
               isChecked
-                ? 'line-through text-stone-400 dark:text-zinc-500'
-                : 'text-stone-800 dark:text-stone-200'
+                ? 'line-through text-slate-400 dark:text-slate-500'
+                : 'text-slate-800 dark:text-slate-200'
             }`}
           >
             {renderInline(text)}
@@ -337,8 +334,8 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     if (line.startsWith('- ') || line.startsWith('* ')) {
       elements.push(
         <div key={`bullet-${i}`} className="flex items-start gap-2 my-0.5 text-sm pl-2">
-          <span className="text-emerald-500 select-none mt-1 text-xs">•</span>
-          <div className="flex-1 text-stone-800 dark:text-stone-200">
+          <span className="text-cyan-400 select-none mt-1 text-xs">◆</span>
+          <div className="flex-1 text-slate-800 dark:text-slate-200">
             {renderInline(line.slice(2))}
           </div>
         </div>
@@ -351,10 +348,10 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     if (numMatch) {
       elements.push(
         <div key={`num-${i}`} className="flex items-start gap-2 my-0.5 text-sm pl-2">
-          <span className="font-semibold text-emerald-600 dark:text-emerald-400 select-none text-xs mt-0.5">
+          <span className="font-semibold text-blue-500 dark:text-cyan-400 select-none text-xs mt-0.5">
             {numMatch[1]}.
           </span>
-          <div className="flex-1 text-stone-800 dark:text-stone-200">
+          <div className="flex-1 text-slate-800 dark:text-slate-200">
             {renderInline(numMatch[2])}
           </div>
         </div>
@@ -364,7 +361,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
     // Standard paragraph
     elements.push(
-      <p key={`p-${i}`} className={`my-1 text-stone-800 dark:text-stone-200 leading-relaxed ${compact ? 'text-xs' : 'text-sm'}`}>
+      <p key={`p-${i}`} className={`my-1 text-slate-800 dark:text-slate-200 leading-relaxed ${compact ? 'text-xs' : 'text-sm'}`}>
         {renderInline(line)}
       </p>
     );

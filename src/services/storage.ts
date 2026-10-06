@@ -1,35 +1,35 @@
 import { Note, VaultConfig } from '../types/note';
 
-const DB_NAME = 'krypta_notes_db';
+const DB_NAME = 'aihnoa_notes_db';
 const DB_VERSION = 1;
 const STORE_NOTES = 'notes';
 const STORE_CONFIG = 'config';
 
-const LOCAL_STORAGE_NOTES_KEY = 'krypta_notes_data';
-const LOCAL_STORAGE_VAULT_KEY = 'krypta_vault_config';
+const LOCAL_STORAGE_NOTES_KEY = 'aihnoa_notes_data';
+const LOCAL_STORAGE_VAULT_KEY = 'aihnoa_vault_config';
 
 const INITIAL_NOTES: Note[] = [
   {
     id: 'welcome-intro-note',
-    title: '✨ Bienvenido a Krypta Notes',
-    content: `# Tu libreta segura y rápida estilo Keep + Evernote ⚡
+    title: '⚡ Bienvenido a Aihnoa Notes',
+    content: `# Tu libreta tecnológica segura estilo Keep + Evernote 🚀
 
-**Krypta Notes** está diseñada para funcionar **100% de manera local**, rápida como Google Keep y potente como Evernote, con **Cifrado de Extremo a Extremo (E2EE)**.
+**Aihnoa Notes** está diseñada con arquitectura **100% Local-First**, rápida, minimalista y con **Cifrado de Extremo a Extremo (E2EE)**.
 
 ### 🌟 Funcionalidades Principales:
 - ✍️ **Markdown Completo**: encabezados, listas, tablas, citas y bloques de código con copia rápida.
 - 🔒 **Cifrado AES-256 de Grado Militar**: bloquea notas individuales o tu **Bóveda Secreta**.
 - 📋 **Listas de Tareas Interactivas**: marca ítems directamente desde las tarjetas sin abrirlas.
-- 🎙️ **Notas de Voz**: graba audio con transcripción de voz a texto integrada.
+- 🎙️ **Notas de Voz**: graba audio con transcripción de voz a texto en tiempo real.
 - 🎨 **Lienzo de Dibujo**: haz bocetos a mano alzada o con stylus en tu pantalla.
 - 📱 **PWA Instalable para Android**: instálala en tu pantalla de inicio y úsala sin conexión a internet.
-- 🔄 **Sincronización E2EE**: exporta e importa respaldos cifrados por QR o archivo seguro.
+- 🔄 **Sincronización E2EE P2P**: exporta e importa respaldos cifrados por código o archivo seguro.
 
-> *Tus datos nunca salen de tu dispositivo sin que tú los cifres con tu propia clave.*`,
+> *Tus datos nunca salen de tu dispositivo sin que tú los cifres con tu propia clave maestra.*`,
     type: 'rich',
     todos: [],
-    tags: ['guía', 'bienvenida', 'productividad'],
-    color: 'emerald',
+    tags: ['tecnología', 'guía', 'aihnoa'],
+    color: 'blue',
     isPinned: true,
     isArchived: false,
     isTrash: false,
@@ -40,18 +40,18 @@ const INITIAL_NOTES: Note[] = [
   },
   {
     id: 'todo-checklist-sample',
-    title: '✅ Lista de Compras y Tareas Semanales',
-    content: `Organización rápida para el hogar y proyectos personales.`,
+    title: '✅ Sprint de Tareas & Desarrollo Tech',
+    content: `Organización de proyectos, entregas y metas de tecnología.`,
     type: 'todo',
     todos: [
-      { id: 't1', text: 'Comprar café tostado en grano y leche de avena', completed: true },
-      { id: 't2', text: 'Revisar presupuesto mensual de suscripciones', completed: true },
-      { id: 't3', text: 'Actualizar respaldo cifrado de notas en la nube', completed: false },
-      { id: 't4', text: 'Instalar Krypta Notes en mi Android como PWA', completed: false },
-      { id: 't5', text: 'Comprar frutas frescas y verduras orgánicas', completed: false },
+      { id: 't1', text: 'Instalar Aihnoa Notes en mi Android como PWA', completed: true },
+      { id: 't2', text: 'Configurar contraseña maestra para la Bóveda E2EE', completed: true },
+      { id: 't3', text: 'Probar notas de voz con transcripción automática', completed: false },
+      { id: 't4', text: 'Exportar respaldo cifrado .aihnoa para la nube', completed: false },
+      { id: 't5', text: 'Organizar etiquetas #tecnología y #proyectos', completed: false },
     ],
-    tags: ['tareas', 'personal', 'compras'],
-    color: 'amber',
+    tags: ['tareas', 'tech', 'productividad'],
+    color: 'sky',
     isPinned: true,
     isArchived: false,
     isTrash: false,
@@ -62,10 +62,10 @@ const INITIAL_NOTES: Note[] = [
   },
   {
     id: 'markdown-cheatsheet-note',
-    title: '📝 Chuleta y Soporte Markdown Avanzado',
-    content: `## Guía Rápida de Sintaxis Markdown
+    title: '📝 Sintaxis Markdown & Código Fuente',
+    content: `## Guía de Formato Tecnológico
 
-Puedes formatear texto fácilmente con la barra de herramientas o escribiendo markdown puro:
+Puedes formatear texto con la barra de herramientas o escribiendo sintaxis Markdown:
 
 ### 1. Formatos de Texto
 - **Texto en Negrita** con \`**palabra**\`
@@ -76,28 +76,25 @@ Puedes formatear texto fácilmente con la barra de herramientas o escribiendo ma
 
 ### 2. Bloques de Código
 \`\`\`typescript
-// Ejemplo de función de cifrado WebCrypto
-async function encryptSecret(message: string, key: CryptoKey) {
+// Algoritmo de cifrado AES-256-GCM
+async function encryptWithAihnoa(payload: string, key: CryptoKey) {
   const iv = crypto.getRandomValues(new Uint8Array(12));
-  return await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(message));
+  return await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(payload));
 }
 \`\`\`
 
-### 3. Citas Inspiradoras
-> "La simplicidad es la máxima sofisticación." — *Leonardo da Vinci*
-
-### 4. Tablas
-| Característica | Google Keep | Evernote | Krypta Notes |
+### 3. Comparativa Tech
+| Característica | Google Keep | Evernote | Aihnoa Notes |
 | :--- | :---: | :---: | :---: |
 | Markdown | ❌ | Parcial | ✅ Completo |
 | E2EE Local | ❌ | Solo de pago | ✅ Gratuito y Libre |
 | Sin Conexión | ✅ | Parcial | ✅ 100% Offline |
-| Ligero y Rápido| ✅ | ❌ Pesado | ✅ Ultraligero |
+| Tema Azul Tech | ❌ | ❌ | ✅ Moderno & Fluido |
 `,
     type: 'note',
     todos: [],
     tags: ['markdown', 'código', 'referencia'],
-    color: 'sky',
+    color: 'indigo',
     isPinned: false,
     isArchived: false,
     isTrash: false,
@@ -108,44 +105,44 @@ async function encryptSecret(message: string, key: CryptoKey) {
   },
   {
     id: 'voice-note-demo',
-    title: '🎙️ Idea de Proyecto: App Móvil E2EE',
+    title: '🎙️ Nota de Audio: Arquitectura E2EE',
     content: `*Grabación de nota de voz con transcripción automática:*
 
-"Recordar añadir opción para sincronizar mediante código QR directo entre teléfono y portátil sin necesidad de servidores intermediarios."`,
+"Aihnoa Notes utiliza el algoritmo AES-256-GCM del navegador y derivación PBKDF2 para garantizar privacidad total sin servidores."`,
     type: 'voice',
     todos: [],
-    tags: ['ideas', 'audio'],
-    color: 'violet',
+    tags: ['audio', 'seguridad'],
+    color: 'teal',
     isPinned: false,
     isArchived: false,
     isTrash: false,
     isEncrypted: false,
-    audioDuration: 14,
-    audioTranscript: 'Recordar añadir opción para sincronizar mediante código QR directo entre teléfono y portátil sin necesidad de servidores intermediarios.',
+    audioDuration: 12,
+    audioTranscript: 'Aihnoa Notes utiliza el algoritmo AES-256-GCM del navegador y derivación PBKDF2 para garantizar privacidad total sin servidores.',
     attachments: [],
     createdAt: Date.now() - 1000 * 60 * 60 * 12,
     updatedAt: Date.now() - 1000 * 60 * 60 * 12,
   },
   {
     id: 'encrypted-vault-sample',
-    title: '🔒 Notas de Contraseñas y Accesos Privados',
+    title: '🔒 Bóveda de Claves y Accesos de Servidores',
     content: `### Información Confidencial Protegida
 
-Esta nota contiene datos personales cifrados con AES-GCM de 256 bits.
+Esta nota contiene datos cifrados con AES-GCM de 256 bits.
 
-- 🔑 **PIN Billetera fría**: 9842
-- 🌐 **Servidor VPS SSH**: 192.168.1.150:2244
-- 🔒 **Frase semilla backup**: \`crypto-safe-vault-local-storage-private-keys\`
+- 🔑 **Llave SSH Cluster**: \`ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG...\`
+- 🌐 **Endpoint API Privada**: \`https://api.internal.aihnoa.cloud/v1\`
+- 🛡️ **Tokens de Infraestructura**: \`aihnoa-e2ee-vault-secure-local\`
 
-*Cualquier persona sin tu contraseña solo verá un bloque de bytes cifrados ilegible.*`,
+*Solo se descifra en memoria local al desbloquear tu bóveda.*`,
     type: 'rich',
     todos: [],
-    tags: ['seguridad', 'privado', 'contraseñas'],
+    tags: ['seguridad', 'privado', 'tech'],
     color: 'charcoal',
     isPinned: false,
     isArchived: false,
     isTrash: false,
-    isEncrypted: false, // will show in vault folder or can be locked
+    isEncrypted: false,
     attachments: [],
     createdAt: Date.now() - 1000 * 60 * 60 * 24,
     updatedAt: Date.now() - 1000 * 60 * 60 * 24,

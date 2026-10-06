@@ -214,7 +214,7 @@ export async function createEncryptedSyncPacket(
   if (!password || password.trim() === '') {
     return {
       version: 1,
-      app: 'KryptaNotes',
+      app: 'AihnoaNotes',
       exportedAt: Date.now(),
       notesCount: notes.length,
       isEncrypted: false,
@@ -226,7 +226,7 @@ export async function createEncryptedSyncPacket(
   const encrypted = await encryptText(jsonString, password);
   return {
     version: 1,
-    app: 'KryptaNotes',
+    app: 'AihnoaNotes',
     exportedAt: Date.now(),
     notesCount: notes.length,
     isEncrypted: true,

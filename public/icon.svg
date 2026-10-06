@@ -1,45 +1,62 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#059669" />
-      <stop offset="50%" stop-color="#10B981" />
-      <stop offset="100%" stop-color="#047857" />
+    <linearGradient id="techBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="50%" stop-color="#1E3A8A" />
+      <stop offset="100%" stop-color="#0284C7" />
     </linearGradient>
-    <linearGradient id="paperGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+    <linearGradient id="cyberBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="50%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#1D4ED8" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#FFFFFF" />
-      <stop offset="100%" stop-color="#F3F4F6" />
+      <stop offset="100%" stop-color="#E2E8F0" />
     </linearGradient>
-    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#F59E0B" />
-      <stop offset="100%" stop-color="#D97706" />
+    <linearGradient id="neonGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF" />
+      <stop offset="100%" stop-color="#3B82F6" />
     </linearGradient>
+    <filter id="cyberGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
     <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.25"/>
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000000" flood-opacity="0.4"/>
     </filter>
   </defs>
   
-  <!-- Background rounded rectangle -->
-  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+  <!-- Outer Rounded Container -->
+  <rect width="512" height="512" rx="112" fill="url(#techBg)"/>
   
-  <!-- Note Sheet -->
-  <g filter="url(#dropShadow)">
-    <path d="M140 120 C140 102.3 154.3 88 172 88 L310 88 L380 158 L380 392 C380 409.7 365.7 424 348 424 L172 424 C154.3 424 140 409.7 140 392 Z" fill="url(#paperGrad)"/>
-    <!-- Folded corner -->
-    <path d="M310 88 L310 150 C310 154.4 313.6 158 318 158 L380 158 Z" fill="#E5E7EB"/>
+  <!-- Tech Circuit Grid Lines -->
+  <g opacity="0.25" stroke="#38BDF8" stroke-width="2">
+    <path d="M40 140 H200 L240 180 H472" />
+    <path d="M40 372 H272 L312 332 H472" />
+    <circle cx="200" cy="140" r="5" fill="#38BDF8" />
+    <circle cx="272" cy="372" r="5" fill="#38BDF8" />
   </g>
 
-  <!-- Note lines / markdown lines -->
-  <rect x="180" y="160" width="100" height="16" rx="8" fill="#10B981" opacity="0.9"/>
-  <rect x="180" y="200" width="150" height="12" rx="6" fill="#9CA3AF" opacity="0.6"/>
-  <rect x="180" y="226" width="130" height="12" rx="6" fill="#9CA3AF" opacity="0.6"/>
-  <rect x="180" y="252" width="140" height="12" rx="6" fill="#9CA3AF" opacity="0.6"/>
+  <!-- Note Sheet with Tech Cut Corner -->
+  <g filter="url(#dropShadow)">
+    <path d="M140 115 C140 98 154 84 172 84 L310 84 L382 156 L382 396 C382 413 368 428 350 428 L172 428 C154 428 140 413 140 396 Z" fill="url(#glowGrad)"/>
+    <!-- Folded corner with tech blue tint -->
+    <path d="M310 84 L310 148 C310 152.4 313.6 156 318 156 L382 156 Z" fill="#93C5FD"/>
+  </g>
 
-  <!-- E2EE Shield & Lock Badge -->
-  <g transform="translate(240, 260)" filter="url(#dropShadow)">
-    <circle cx="68" cy="68" r="62" fill="#1F2937"/>
-    <circle cx="68" cy="68" r="54" fill="url(#goldGrad)"/>
-    <!-- Lock Icon -->
-    <path d="M68 44 C61.4 44 56 49.4 56 56 L56 64 L52 64 C49.8 64 48 65.8 48 68 L48 88 C48 90.2 49.8 92 52 92 L84 92 C86.2 92 88 90.2 88 88 L88 68 C88 65.8 86.2 64 84 64 L80 64 L80 56 C80 49.4 74.6 44 68 44 Z M68 50 C71.3 50 74 52.7 74 56 L74 64 L62 64 L62 56 C62 52.7 64.7 50 68 50 Z" fill="#111827"/>
-    <circle cx="68" cy="76" r="3.5" fill="#FFFFFF"/>
+  <!-- Tech Note Holographic Header & Lines -->
+  <rect x="180" y="152" width="105" height="16" rx="8" fill="url(#cyberBlue)"/>
+  <rect x="180" y="192" width="150" height="12" rx="6" fill="#64748B" opacity="0.5"/>
+  <rect x="180" y="218" width="130" height="12" rx="6" fill="#64748B" opacity="0.5"/>
+  <rect x="180" y="244" width="140" height="12" rx="6" fill="#64748B" opacity="0.5"/>
+
+  <!-- E2EE Shield & Core Tech Lock -->
+  <g transform="translate(236, 252)" filter="url(#dropShadow)">
+    <circle cx="72" cy="72" r="64" fill="#0B1120" stroke="#38BDF8" stroke-width="3"/>
+    <circle cx="72" cy="72" r="54" fill="url(#neonGlow)"/>
+    <!-- Lock Icon & Quantum Keyhole -->
+    <path d="M72 46 C65 46 59 52 59 59 L59 67 L55 67 C52.5 67 50.5 69 50.5 71.5 L50.5 93.5 C50.5 96 52.5 98 55 98 L89 98 C91.5 98 93.5 96 93.5 93.5 L93.5 71.5 C93.5 69 91.5 67 89 67 L85 67 L85 59 C85 52 79 46 72 46 Z M72 52.5 C75.5 52.5 78.5 55.5 78.5 59 L78.5 67 L65.5 67 L65.5 59 C65.5 55.5 68.5 52.5 72 52.5 Z" fill="#0B1120"/>
+    <circle cx="72" cy="80.5" r="4" fill="#00F0FF" filter="url(#cyberGlow)"/>
   </g>
 </svg>

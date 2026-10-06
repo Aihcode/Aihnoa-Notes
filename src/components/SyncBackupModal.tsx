@@ -14,7 +14,8 @@ import {
   Smartphone, 
   Layers, 
   CheckCircle2, 
-  AlertCircle 
+  AlertCircle,
+  Cpu
 } from 'lucide-react';
 import { Note } from '../types/note';
 import { createEncryptedSyncPacket, parseSyncPacket } from '../services/crypto';
@@ -62,7 +63,7 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
         .format(new Date())
         .replace(/:/g, '-');
       a.href = url;
-      a.download = `krypta-notes-${encryptExport ? 'e2ee-vault' : 'plain'}-${dateStr}.krypta.json`;
+      a.download = `aihnoa-notes-${encryptExport ? 'e2ee-vault' : 'backup'}-${dateStr}.aihnoa.json`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (err: any) {
@@ -77,7 +78,6 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
         encryptExport ? exportPassword : undefined
       );
       const raw = JSON.stringify(packet);
-      // Compact string
       setSyncTokenString(btoa(unescape(encodeURIComponent(raw))));
     } catch (err: any) {
       alert('Error al generar token de sincronización: ' + err.message);
@@ -108,7 +108,7 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
       triggerHaptic('heavy');
       setImportStatus({
         success: true,
-        message: `¡Éxito! Se importaron ${importedNotes.length} notas correctamente.`,
+        message: `¡Éxito! Se importaron ${importedNotes.length} notas en Aihnoa Notes.`,
       });
     } catch (err: any) {
       triggerHaptic('heavy');
@@ -142,7 +142,7 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
       triggerHaptic('heavy');
       setImportStatus({
         success: true,
-        message: `¡Éxito! Se sincronizaron ${importedNotes.length} notas desde el otro dispositivo.`,
+        message: `¡Éxito! Se sincronizaron ${importedNotes.length} notas en Aihnoa Notes.`,
       });
     } catch (err: any) {
       triggerHaptic('heavy');
@@ -154,8 +154,7 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
   };
 
   const handleExportMarkdownZip = () => {
-    // Generate combined Markdown file or plain bundle
-    let combinedMd = `# Respaldo Completo Krypta Notes - ${new Date().toLocaleDateString()}\n\n`;
+    let combinedMd = `# Respaldo Completo Aihnoa Notes - ${new Date().toLocaleDateString()}\n\n`;
     for (const note of notes) {
       combinedMd += `---\n\n## ${note.title}\n*Fecha: ${new Date(note.createdAt).toLocaleString()} | Etiquetas: ${note.tags.join(', ') || 'ninguna'}*\n\n`;
       if (note.todos.length > 0) {
@@ -172,37 +171,37 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `krypta-notas-markdown-${new Date().toISOString().slice(0, 10)}.md`;
+    a.download = `aihnoa-notas-markdown-${new Date().toISOString().slice(0, 10)}.md`;
     a.click();
     URL.revokeObjectURL(url);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-3 animate-in fade-in duration-200">
-      <div className="w-full max-w-lg rounded-3xl bg-white dark:bg-zinc-900 shadow-2xl border border-stone-200 dark:border-zinc-800 overflow-hidden text-stone-900 dark:text-stone-100 flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-3 animate-in fade-in duration-200">
+      <div className="w-full max-w-lg rounded-3xl bg-white dark:bg-[#0B1120] shadow-2xl border border-slate-200 dark:border-blue-900 overflow-hidden text-slate-900 dark:text-slate-100 flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="p-5 pb-3 flex items-center justify-between border-b border-stone-100 dark:border-zinc-800">
+        <div className="p-5 pb-3 flex items-center justify-between border-b border-slate-100 dark:border-blue-950">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-emerald-100 dark:bg-emerald-950 text-emerald-600 rounded-xl">
+            <div className="p-2 bg-blue-100 dark:bg-blue-950 text-blue-500 rounded-xl">
               <RefreshCw className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold">Sincronización E2EE & Respaldos</h3>
-              <p className="text-xs text-stone-500 dark:text-zinc-400">
-                Transfiere tus notas entre Android, PC y tablet con cifrado
+              <h3 className="text-base font-bold">Sincronización Tech & Respaldos</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Transfiere tus notas de Aihnoa Notes entre Android, PC y tablet
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 rounded-full"
+            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex border-b border-stone-200 dark:border-zinc-800 bg-stone-50 dark:bg-zinc-800/40 px-3 pt-2 gap-1 overflow-x-auto">
+        <div className="flex border-b border-slate-200 dark:border-blue-950 bg-slate-50 dark:bg-slate-900/40 px-3 pt-2 gap-1 overflow-x-auto">
           <button
             onClick={() => {
               setTab('export');
@@ -210,8 +209,8 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
             }}
             className={`px-3.5 py-2 text-xs font-bold rounded-t-xl transition flex items-center gap-1.5 ${
               tab === 'export'
-                ? 'bg-white dark:bg-zinc-900 text-emerald-600 border-t-2 border-emerald-600 shadow-sm'
-                : 'text-stone-500 hover:text-stone-800 dark:hover:text-stone-300'
+                ? 'bg-white dark:bg-[#0B1120] text-blue-600 dark:text-cyan-400 border-t-2 border-blue-500 shadow-sm'
+                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
             }`}
           >
             <Download className="w-3.5 h-3.5" />
@@ -224,8 +223,8 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
             }}
             className={`px-3.5 py-2 text-xs font-bold rounded-t-xl transition flex items-center gap-1.5 ${
               tab === 'import'
-                ? 'bg-white dark:bg-zinc-900 text-emerald-600 border-t-2 border-emerald-600 shadow-sm'
-                : 'text-stone-500 hover:text-stone-800 dark:hover:text-stone-300'
+                ? 'bg-white dark:bg-[#0B1120] text-blue-600 dark:text-cyan-400 border-t-2 border-blue-500 shadow-sm'
+                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
             }`}
           >
             <Upload className="w-3.5 h-3.5" />
@@ -239,12 +238,12 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
             }}
             className={`px-3.5 py-2 text-xs font-bold rounded-t-xl transition flex items-center gap-1.5 ${
               tab === 'syncToken'
-                ? 'bg-white dark:bg-zinc-900 text-emerald-600 border-t-2 border-emerald-600 shadow-sm'
-                : 'text-stone-500 hover:text-stone-800 dark:hover:text-stone-300'
+                ? 'bg-white dark:bg-[#0B1120] text-blue-600 dark:text-cyan-400 border-t-2 border-blue-500 shadow-sm'
+                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
             }`}
           >
             <Smartphone className="w-3.5 h-3.5" />
-            Sincronizar Dispositivo
+            P2P Sync
           </button>
           <button
             onClick={() => {
@@ -253,8 +252,8 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
             }}
             className={`px-3.5 py-2 text-xs font-bold rounded-t-xl transition flex items-center gap-1.5 ${
               tab === 'markdown'
-                ? 'bg-white dark:bg-zinc-900 text-emerald-600 border-t-2 border-emerald-600 shadow-sm'
-                : 'text-stone-500 hover:text-stone-800 dark:hover:text-stone-300'
+                ? 'bg-white dark:bg-[#0B1120] text-blue-600 dark:text-cyan-400 border-t-2 border-blue-500 shadow-sm'
+                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-300'
             }`}
           >
             <FileCode className="w-3.5 h-3.5" />
@@ -268,14 +267,14 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
             <div
               className={`p-3 rounded-2xl text-xs flex items-center gap-2 border ${
                 importStatus.success
-                  ? 'bg-emerald-50 dark:bg-emerald-950/50 border-emerald-300 text-emerald-800 dark:text-emerald-200'
+                  ? 'bg-blue-50 dark:bg-blue-950/50 border-blue-300 text-blue-900 dark:text-cyan-300'
                   : 'bg-red-50 dark:bg-red-950/50 border-red-300 text-red-800 dark:text-red-200'
               }`}
             >
               {importStatus.success ? (
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
               ) : (
-                <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
               )}
               <span>{importStatus.message}</span>
             </div>
@@ -284,35 +283,34 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
           {/* TAB 1: EXPORT */}
           {tab === 'export' && (
             <div className="space-y-4">
-              <div className="p-3 bg-stone-50 dark:bg-zinc-800/50 rounded-2xl border border-stone-200 dark:border-zinc-800 text-xs space-y-2">
+              <div className="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-blue-950 text-xs space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-stone-700 dark:text-stone-300">
-                    Notas a exportar:
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">
+                    Notas en Aihnoa Notes:
                   </span>
-                  <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold rounded-full">
+                  <span className="px-2.5 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-cyan-300 font-bold rounded-full border border-blue-200 dark:border-blue-800">
                     {notes.length} notas
                   </span>
                 </div>
-                <p className="text-stone-500 dark:text-zinc-400">
-                  Crea un archivo seguro que contiene todas tus notas, listas de tareas, notas de
-                  voz y dibujos.
+                <p className="text-slate-500 dark:text-slate-400">
+                  Crea un archivo seguro que contiene todas tus notas, tareas, audios y dibujos.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <label className="flex items-center gap-2 text-xs font-semibold text-stone-800 dark:text-stone-200 cursor-pointer">
+                <label className="flex items-center gap-2 text-xs font-semibold text-slate-800 dark:text-slate-200 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={encryptExport}
                     onChange={(e) => setEncryptExport(e.target.checked)}
-                    className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                    className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
                   />
                   <span>Proteger respaldo con Cifrado AES-256 (E2EE)</span>
                 </label>
 
                 {encryptExport && (
                   <div>
-                    <label className="block text-xs font-medium text-stone-600 dark:text-stone-400 mb-1">
+                    <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
                       Contraseña de cifrado para este archivo:
                     </label>
                     <input
@@ -320,7 +318,7 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
                       value={exportPassword}
                       onChange={(e) => setExportPassword(e.target.value)}
                       placeholder="Ingresa una clave segura"
-                      className="w-full px-4 py-2.5 rounded-2xl bg-stone-100 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-blue-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                 )}
@@ -328,10 +326,10 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
 
               <button
                 onClick={handleExportVaultFile}
-                className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-2xl shadow-md active:scale-98 transition flex items-center justify-center gap-2"
+                className="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white text-xs font-bold rounded-2xl shadow-lg shadow-blue-600/20 active:scale-98 transition flex items-center justify-center gap-2"
               >
                 <Download className="w-4 h-4" />
-                Descargar Archivo de Bóveda (.krypta.json)
+                Descargar Bóveda (.aihnoa.json)
               </button>
             </div>
           )}
@@ -339,27 +337,27 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
           {/* TAB 2: IMPORT */}
           {tab === 'import' && (
             <div className="space-y-4">
-              <div className="p-3 bg-stone-50 dark:bg-zinc-800/50 rounded-2xl border border-stone-200 dark:border-zinc-800 text-xs space-y-2">
-                <p className="text-stone-600 dark:text-stone-300">
-                  Restaura o combina notas desde un archivo <code className="font-mono text-emerald-600">.krypta.json</code> generado previamente.
+              <div className="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-blue-950 text-xs space-y-2">
+                <p className="text-slate-600 dark:text-slate-300">
+                  Restaura notas desde un archivo <code className="font-mono text-cyan-400">.aihnoa.json</code> o JSON.
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
-                  Contraseña de descifrado (si el archivo está cifrado):
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Contraseña de descifrado:
                 </label>
                 <input
                   type="password"
                   value={importPassword}
                   onChange={(e) => setImportPassword(e.target.value)}
                   placeholder="Contraseña del respaldo"
-                  className="w-full px-4 py-2.5 rounded-2xl bg-stone-100 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-blue-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Modo de Importación:
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -368,16 +366,16 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
                     onClick={() => setImportMergeMode('merge')}
                     className={`p-2.5 rounded-2xl border text-xs font-semibold text-left transition ${
                       importMergeMode === 'merge'
-                        ? 'border-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300'
-                        : 'border-stone-200 dark:border-zinc-800 bg-stone-50 dark:bg-zinc-800/40 text-stone-600 dark:text-stone-400'
+                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-cyan-300'
+                        : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-400'
                     }`}
                   >
                     <div className="font-bold flex items-center gap-1">
-                      <Layers className="w-3.5 h-3.5" />
-                      Combinar (Recomendado)
+                      <Layers className="w-3.5 h-3.5 text-blue-500" />
+                      Combinar
                     </div>
-                    <p className="text-[10px] font-normal text-stone-500 dark:text-zinc-400 mt-0.5">
-                      Agrega notas nuevas sin borrar las existentes
+                    <p className="text-[10px] font-normal text-slate-500 dark:text-slate-400 mt-0.5">
+                      Agrega notas sin borrar las existentes
                     </p>
                   </button>
 
@@ -387,31 +385,31 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
                     className={`p-2.5 rounded-2xl border text-xs font-semibold text-left transition ${
                       importMergeMode === 'replace'
                         ? 'border-red-500 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300'
-                        : 'border-stone-200 dark:border-zinc-800 bg-stone-50 dark:bg-zinc-800/40 text-stone-600 dark:text-stone-400'
+                        : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-400'
                     }`}
                   >
-                    <div className="font-bold text-red-600 dark:text-red-400">
-                      Reemplazar Todo
+                    <div className="font-bold text-red-500">
+                      Reemplazar
                     </div>
-                    <p className="text-[10px] font-normal text-stone-500 dark:text-zinc-400 mt-0.5">
-                      Sobrescribe todas las notas actuales
+                    <p className="text-[10px] font-normal text-slate-500 dark:text-slate-400 mt-0.5">
+                      Sobrescribe todo
                     </p>
                   </button>
                 </div>
               </div>
 
               <div>
-                <label className="w-full flex flex-col items-center justify-center p-6 border-2 border-dashed border-stone-300 dark:border-zinc-700 hover:border-emerald-500 rounded-3xl cursor-pointer bg-stone-50 dark:bg-zinc-800/40 transition">
-                  <Upload className="w-8 h-8 text-emerald-600 mb-2" />
-                  <span className="text-xs font-bold text-stone-800 dark:text-stone-200">
-                    Seleccionar archivo .krypta.json
+                <label className="w-full flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-300 dark:border-blue-900/80 hover:border-blue-500 rounded-3xl cursor-pointer bg-slate-50 dark:bg-slate-900/40 transition">
+                  <Upload className="w-8 h-8 text-blue-500 mb-2" />
+                  <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                    Seleccionar archivo .aihnoa.json / .json
                   </span>
-                  <span className="text-[11px] text-stone-400 mt-0.5">
+                  <span className="text-[11px] text-slate-400 mt-0.5">
                     Toca para explorar archivos locales
                   </span>
                   <input
                     type="file"
-                    accept=".json,.krypta"
+                    accept=".json,.aihnoa,.krypta"
                     onChange={handleImportFile}
                     className="hidden"
                   />
@@ -423,13 +421,13 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
           {/* TAB 3: SYNC TOKEN */}
           {tab === 'syncToken' && (
             <div className="space-y-4">
-              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 rounded-2xl text-xs text-emerald-900 dark:text-emerald-200">
+              <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 rounded-2xl text-xs text-blue-950 dark:text-cyan-300">
                 <p className="font-bold flex items-center gap-1.5 mb-1">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  Sincronización Punto a Punto (P2P E2EE)
+                  <ShieldCheck className="w-4 h-4 text-cyan-400" />
+                  Sincronización P2P Cifrada en Aihnoa Notes
                 </p>
-                <p className="text-[11px] text-emerald-800 dark:text-emerald-300">
-                  Copia este código cifrado y pégalo en tu otro dispositivo (teléfono Android, tableta o computadora) para sincronizar al instante sin servidores.
+                <p className="text-[11px] text-slate-600 dark:text-slate-300">
+                  Copia este código cifrado y pégalo en tu otro dispositivo (teléfono Android, tablet o laptop) para sincronizar directamente.
                 </p>
               </div>
 
@@ -443,7 +441,7 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
                       triggerHaptic('light');
                       setTimeout(() => setCopied(false), 2000);
                     }}
-                    className="flex items-center gap-1 text-emerald-600 hover:text-emerald-700"
+                    className="flex items-center gap-1 text-blue-500 hover:text-cyan-400"
                   >
                     {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                     <span>{copied ? '¡Copiado!' : 'Copiar Código'}</span>
@@ -453,13 +451,13 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
                   value={syncTokenString}
                   onChange={(e) => setSyncTokenString(e.target.value)}
                   rows={4}
-                  className="w-full p-2.5 rounded-2xl font-mono text-[10px] bg-stone-100 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-700 text-stone-700 dark:text-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 break-all"
+                  className="w-full p-2.5 rounded-2xl font-mono text-[10px] bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-blue-900 text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 break-all"
                   placeholder="Pega aquí el código copiado desde tu otro dispositivo..."
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-stone-600 dark:text-stone-400 mb-1">
+                <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
                   Contraseña de descifrado del paquete:
                 </label>
                 <input
@@ -467,13 +465,13 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
                   value={importPassword}
                   onChange={(e) => setImportPassword(e.target.value)}
                   placeholder="Contraseña establecida al generar"
-                  className="w-full px-4 py-2 rounded-2xl bg-stone-100 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-2 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-blue-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               <button
                 onClick={handleImportSyncToken}
-                className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-2xl shadow-md active:scale-98 transition flex items-center justify-center gap-2"
+                className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white text-xs font-bold rounded-2xl shadow-md active:scale-98 transition flex items-center justify-center gap-2"
               >
                 <RefreshCw className="w-4 h-4" />
                 Cargar Notas desde Código
@@ -484,19 +482,19 @@ export const SyncBackupModal: React.FC<SyncBackupModalProps> = ({
           {/* TAB 4: MARKDOWN EXPORT */}
           {tab === 'markdown' && (
             <div className="space-y-4">
-              <div className="p-3 bg-stone-50 dark:bg-zinc-800/50 rounded-2xl border border-stone-200 dark:border-zinc-800 text-xs space-y-2">
-                <p className="font-bold text-stone-800 dark:text-stone-200 flex items-center gap-1.5">
-                  <FileText className="w-4 h-4 text-emerald-600" />
+              <div className="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-blue-950 text-xs space-y-2">
+                <p className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <FileText className="w-4 h-4 text-blue-500" />
                   Exportación Libre en Texto Plano Markdown
                 </p>
-                <p className="text-stone-500 dark:text-zinc-400">
-                  Exporta todas tus notas a formato Markdown estándar compatible con Obsidian, Notion, Bear o cualquier editor de texto.
+                <p className="text-slate-500 dark:text-slate-400">
+                  Exporta todas tus notas de Aihnoa Notes a formato Markdown estándar compatible con Obsidian, Notion o editores de texto.
                 </p>
               </div>
 
               <button
                 onClick={handleExportMarkdownZip}
-                className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-2xl shadow-md active:scale-98 transition flex items-center justify-center gap-2"
+                className="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white text-xs font-bold rounded-2xl shadow-md active:scale-98 transition flex items-center justify-center gap-2"
               >
                 <Download className="w-4 h-4" />
                 Exportar Todo a Markdown (.md)

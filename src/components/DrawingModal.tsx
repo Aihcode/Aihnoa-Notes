@@ -11,12 +11,12 @@ interface DrawingModalProps {
 
 const COLORS = [
   '#000000',
+  '#2563EB',
+  '#06B6D4',
   '#10B981',
-  '#3B82F6',
-  '#EF4444',
-  '#F59E0B',
   '#8B5CF6',
-  '#EC4899',
+  '#F59E0B',
+  '#EF4444',
   '#FFFFFF',
 ];
 
@@ -29,7 +29,7 @@ export const DrawingModal: React.FC<DrawingModalProps> = ({
   initialDataUrl,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [color, setColor] = useState('#10B981');
+  const [color, setColor] = useState('#2563EB');
   const [brushSize, setBrushSize] = useState(5);
   const [isEraser, setIsEraser] = useState(false);
   const [history, setHistory] = useState<ImageData[]>([]);
@@ -39,14 +39,12 @@ export const DrawingModal: React.FC<DrawingModalProps> = ({
   useEffect(() => {
     if (!isOpen) return;
 
-    // Initialize canvas
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
 
-    // Set high resolution canvas dimensions
     const rect = canvas.getBoundingClientRect();
     const width = rect.width || 400;
     const height = Math.min(window.innerHeight * 0.55, 420);
@@ -57,7 +55,6 @@ export const DrawingModal: React.FC<DrawingModalProps> = ({
     canvas.style.height = `${height}px`;
     ctx.scale(2, 2);
 
-    // Default white background
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, width, height);
 
@@ -197,31 +194,31 @@ export const DrawingModal: React.FC<DrawingModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-3 animate-in fade-in duration-200">
-      <div className="w-full max-w-lg rounded-3xl bg-white dark:bg-zinc-900 shadow-2xl border border-stone-200 dark:border-zinc-800 overflow-hidden text-stone-900 dark:text-stone-100 flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-3 animate-in fade-in duration-200">
+      <div className="w-full max-w-lg rounded-3xl bg-white dark:bg-[#0B1120] shadow-2xl border border-slate-200 dark:border-blue-900 overflow-hidden text-slate-900 dark:text-slate-100 flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="p-4 flex items-center justify-between border-b border-stone-100 dark:border-zinc-800">
+        <div className="p-4 flex items-center justify-between border-b border-slate-100 dark:border-blue-950">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-emerald-100 dark:bg-emerald-950 text-emerald-600 rounded-xl">
+            <div className="p-2 bg-blue-100 dark:bg-blue-950 text-blue-500 rounded-xl">
               <Palette className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold">Lienzo de Dibujo & Bocetos</h3>
-              <p className="text-[11px] text-stone-500 dark:text-zinc-400">
-                Dibuja a mano alzada con soporte táctil
+              <h3 className="text-base font-bold">Lienzo de Dibujo & Diagramas</h3>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                Aihnoa Notes soporte táctil y stylus
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 rounded-full"
+            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Toolbar */}
-        <div className="p-3 bg-stone-50 dark:bg-zinc-800/40 border-b border-stone-100 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-2">
+        <div className="p-3 bg-slate-50 dark:bg-slate-900/40 border-b border-slate-100 dark:border-blue-950 flex flex-wrap items-center justify-between gap-2">
           {/* Colors */}
           <div className="flex items-center gap-1.5 overflow-x-auto py-1">
             {COLORS.map((c) => (
@@ -231,8 +228,8 @@ export const DrawingModal: React.FC<DrawingModalProps> = ({
                   setColor(c);
                   setIsEraser(false);
                 }}
-                className={`w-6 h-6 rounded-full border border-stone-300 dark:border-zinc-700 transition ${
-                  color === c && !isEraser ? 'ring-2 ring-emerald-500 ring-offset-2 scale-110' : ''
+                className={`w-6 h-6 rounded-full border border-slate-300 dark:border-slate-700 transition ${
+                  color === c && !isEraser ? 'ring-2 ring-blue-500 ring-offset-2 scale-110' : ''
                 }`}
                 style={{ backgroundColor: c }}
               />
@@ -245,10 +242,10 @@ export const DrawingModal: React.FC<DrawingModalProps> = ({
               onClick={() => setIsEraser(false)}
               className={`p-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1 transition ${
                 !isEraser
-                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
-                  : 'bg-white dark:bg-zinc-800 text-stone-700 dark:text-stone-300 border-stone-300 dark:border-zinc-700'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700'
               }`}
-              title="Pincel"
+              title="Pincel Tech"
             >
               <PenTool className="w-3.5 h-3.5" />
             </button>
@@ -257,8 +254,8 @@ export const DrawingModal: React.FC<DrawingModalProps> = ({
               onClick={() => setIsEraser(true)}
               className={`p-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1 transition ${
                 isEraser
-                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
-                  : 'bg-white dark:bg-zinc-800 text-stone-700 dark:text-stone-300 border-stone-300 dark:border-zinc-700'
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700'
               }`}
               title="Borrador"
             >
@@ -266,13 +263,13 @@ export const DrawingModal: React.FC<DrawingModalProps> = ({
             </button>
 
             {/* Brush sizes */}
-            <div className="flex items-center gap-1 bg-white dark:bg-zinc-800 p-1 rounded-lg border border-stone-200 dark:border-zinc-700">
+            <div className="flex items-center gap-1 bg-white dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
               {BRUSH_SIZES.map((sz) => (
                 <button
                   key={sz}
                   onClick={() => setBrushSize(sz)}
                   className={`w-5 h-5 flex items-center justify-center rounded ${
-                    brushSize === sz ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-600' : 'text-stone-500'
+                    brushSize === sz ? 'bg-blue-100 dark:bg-blue-950 text-blue-500' : 'text-slate-500'
                   }`}
                 >
                   <Circle
@@ -288,7 +285,7 @@ export const DrawingModal: React.FC<DrawingModalProps> = ({
               <button
                 onClick={undo}
                 disabled={historyStep <= 0}
-                className="p-1.5 rounded-lg text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-zinc-700 disabled:opacity-30 transition"
+                className="p-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-30 transition"
                 title="Deshacer"
               >
                 <Undo2 className="w-4 h-4" />
@@ -296,7 +293,7 @@ export const DrawingModal: React.FC<DrawingModalProps> = ({
               <button
                 onClick={redo}
                 disabled={historyStep >= history.length - 1}
-                className="p-1.5 rounded-lg text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-zinc-700 disabled:opacity-30 transition"
+                className="p-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-30 transition"
                 title="Rehacer"
               >
                 <Redo2 className="w-4 h-4" />
@@ -313,7 +310,7 @@ export const DrawingModal: React.FC<DrawingModalProps> = ({
         </div>
 
         {/* Canvas Area */}
-        <div className="flex-1 bg-stone-200/60 dark:bg-zinc-950 p-2 flex items-center justify-center overflow-hidden touch-none select-none">
+        <div className="flex-1 bg-slate-200/60 dark:bg-[#070B14] p-2 flex items-center justify-center overflow-hidden touch-none select-none">
           <canvas
             ref={canvasRef}
             onMouseDown={startDrawing}
@@ -323,21 +320,21 @@ export const DrawingModal: React.FC<DrawingModalProps> = ({
             onTouchStart={startDrawing}
             onTouchMove={draw}
             onTouchEnd={stopDrawing}
-            className="w-full bg-white rounded-2xl shadow-inner cursor-crosshair border border-stone-300"
+            className="w-full bg-white rounded-2xl shadow-inner cursor-crosshair border border-slate-300"
           />
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-stone-50 dark:bg-zinc-800/50 border-t border-stone-100 dark:border-zinc-800 flex items-center justify-end gap-2">
+        <div className="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-blue-950 flex items-center justify-end gap-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-xs font-semibold text-stone-600 dark:text-stone-300 hover:bg-stone-200/60 dark:hover:bg-zinc-700/60 rounded-xl transition"
+            className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800 rounded-xl transition"
           >
             Cancelar
           </button>
           <button
             onClick={handleSave}
-            className="flex items-center gap-1.5 px-5 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-sm transition"
+            className="flex items-center gap-1.5 px-5 py-2 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl shadow-md transition"
           >
             <Check className="w-4 h-4" />
             Insertar Dibujo

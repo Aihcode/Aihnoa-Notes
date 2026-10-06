@@ -327,7 +327,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-stone-50 dark:bg-zinc-950 text-stone-900 dark:text-stone-100 flex flex-col lg:flex-row font-sans selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row font-sans selection:bg-blue-600 selection:text-white">
       {/* SIDEBAR NAVIGATION */}
       <Sidebar
         currentFolder={currentFolder}
@@ -371,7 +371,7 @@ export default function App() {
           {currentFolder === 'trash' && notes.some((n) => n.isTrash) && (
             <div className="mb-4 p-3.5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 rounded-2xl flex items-center justify-between text-xs text-red-800 dark:text-red-300">
               <div className="flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-red-600" />
+                <AlertTriangle className="w-4 h-4 text-red-500" />
                 <span>Las notas en la papelera se conservan localmente.</span>
               </div>
               <button
@@ -386,10 +386,10 @@ export default function App() {
           {/* EMPTY STATE */}
           {filteredNotes.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
-              <div className="w-20 h-20 rounded-3xl bg-stone-100 dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 flex items-center justify-center text-stone-400 dark:text-zinc-600 mb-4 shadow-sm">
-                <Inbox className="w-10 h-10" />
+              <div className="w-20 h-20 rounded-3xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-950/80 flex items-center justify-center text-slate-400 dark:text-slate-600 mb-4 shadow-sm">
+                <Inbox className="w-10 h-10 text-blue-500/60" />
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-stone-800 dark:text-stone-200">
+              <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-200">
                 {searchQuery
                   ? 'No se encontraron notas con esa búsqueda'
                   : currentFolder === 'pinned'
@@ -401,21 +401,21 @@ export default function App() {
                   : currentFolder === 'drawings'
                   ? 'No tienes dibujos ni bocetos'
                   : currentFolder === 'vault'
-                  ? 'Tu Bóveda Cifrada está vacía'
+                  ? 'Tu Bóveda Cifrada de Aihnoa Notes está vacía'
                   : currentFolder === 'trash'
                   ? 'La papelera está vacía'
                   : 'No hay notas aquí todavía'}
               </h3>
-              <p className="text-xs text-stone-500 dark:text-zinc-400 mt-1 max-w-sm">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm">
                 {searchQuery
                   ? 'Intenta buscar con otros términos o limpia el filtro.'
-                  : 'Empieza creando una nota con Markdown, una lista de tareas, audio o dibujo.'}
+                  : 'Empieza creando una nota con Markdown, listas de tareas, audios o diagramas.'}
               </p>
 
               {currentFolder !== 'trash' && (
                 <button
                   onClick={() => handleOpenNewNote('note')}
-                  className="mt-5 flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-2xl shadow-md transition active:scale-95"
+                  className="mt-5 flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white text-xs font-bold rounded-2xl shadow-md shadow-blue-600/30 transition active:scale-95"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Crear Primera Nota</span>
@@ -424,11 +424,11 @@ export default function App() {
             </div>
           ) : (
             <div className="space-y-6">
-              {/* PINNED SECTION (If 'all' folder and there are pinned notes) */}
+              {/* PINNED SECTION */}
               {pinnedNotes.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-1.5 mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-500">
-                    <Pin className="w-3 h-3 text-emerald-600" />
+                  <div className="flex items-center gap-1.5 mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-blue-500 dark:text-cyan-400">
+                    <Pin className="w-3 h-3 text-blue-500" />
                     <span>Fijadas ({pinnedNotes.length})</span>
                   </div>
 
@@ -465,8 +465,8 @@ export default function App() {
               {/* OTHER / ALL NOTES SECTION */}
               <div>
                 {pinnedNotes.length > 0 && otherNotes.length > 0 && (
-                  <div className="flex items-center gap-1.5 mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-500">
-                    <Layers className="w-3 h-3" />
+                  <div className="flex items-center gap-1.5 mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                    <Layers className="w-3 h-3 text-blue-500" />
                     <span>Otras Notas ({otherNotes.length})</span>
                   </div>
                 )}

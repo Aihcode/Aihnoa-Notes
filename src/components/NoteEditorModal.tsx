@@ -34,7 +34,8 @@ import {
   Download,
   AlertCircle,
   HelpCircle,
-  PenTool
+  PenTool,
+  Cpu
 } from 'lucide-react';
 import { Note, NoteColor, TodoItem, AttachmentItem, VaultConfig } from '../types/note';
 import { NOTE_COLORS, triggerHaptic } from '../utils/theme';
@@ -95,7 +96,6 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Load note data on open
   useEffect(() => {
     if (note && isOpen) {
       setTitle(note.title || '');
@@ -115,7 +115,6 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
 
       if (note.isEncrypted) {
         setIsDecryptedForEditing(false);
-        // Try auto-decrypt with masterPassword if available
         if (masterPassword && note.encryptedPayload) {
           decryptNoteContent(note, masterPassword)
             .then((decrypted) => {
@@ -126,15 +125,12 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
               setAttachments(decrypted.attachments);
               setIsDecryptedForEditing(true);
             })
-            .catch(() => {
-              // Master password did not match or not unlocked
-            });
+            .catch(() => {});
         }
       } else {
         setIsDecryptedForEditing(true);
       }
     } else if (isOpen) {
-      // New note default
       setTitle('');
       setContent('');
       setColor('default');
@@ -157,7 +153,6 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
 
   const currentTheme = NOTE_COLORS[color] || NOTE_COLORS.default;
 
-  // Insert markdown helper at cursor position
   const insertMarkdown = (prefix: string, suffix: string = '', defaultPlaceholder: string = '') => {
     triggerHaptic('light');
     const textarea = textareaRef.current;
@@ -232,7 +227,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
     if (isEncrypted) {
       const encryptionPass = masterPassword || decryptPassword;
       if (!encryptionPass) {
-        alert('Para cifrar esta nota, debes ingresar una contraseña o desbloquear tu Bóveda.');
+        alert('Para cifrar esta nota, debes ingresar una contraseña o desbloquear tu Bóveda en Aihnoa Notes.');
         return;
       }
       targetNote = await encryptNoteContent(targetNote, encryptionPass);
@@ -242,7 +237,6 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
     onClose();
   };
 
-  // Todo items management
   const handleAddTodo = () => {
     if (!newTodoText.trim()) return;
     triggerHaptic('light');
@@ -267,7 +261,6 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
     setTodos(todos.filter((t) => t.id !== todoId));
   };
 
-  // Tags management
   const handleAddTag = () => {
     const clean = tagInput.trim().toLowerCase().replace(/^#/, '');
     if (clean && !tags.includes(clean)) {
@@ -280,7 +273,6 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
     setTags(tags.filter((t) => t !== tagToRemove));
   };
 
-  // Image attachment upload
   const handleAttachmentUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -302,15 +294,14 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
     }
   };
 
-  // Word & character stats
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
   const charCount = content.length;
   const readTimeMin = Math.max(1, Math.ceil(wordCount / 200));
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-2 sm:p-4 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-2 sm:p-4 animate-in fade-in duration-200">
       <div
-        className={`w-full max-w-4xl h-[94vh] rounded-3xl shadow-2xl border flex flex-col overflow-hidden text-stone-900 dark:text-stone-100 transition-colors duration-200 ${currentTheme.bgClass} ${currentTheme.borderClass}`}
+        className={`w-full max-w-4xl h-[94vh] rounded-3xl shadow-2xl border flex flex-col overflow-hidden text-slate-900 dark:text-slate-100 transition-colors duration-200 ${currentTheme.bgClass} ${currentTheme.borderClass}`}
       >
         {/* TOP BAR */}
         <div className="p-3.5 sm:px-6 flex items-center justify-between border-b border-black/5 dark:border-white/10 gap-2">
@@ -323,8 +314,8 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
               }}
               className={`p-2 rounded-2xl transition ${
                 isPinned
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-stone-500 hover:text-stone-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
               }`}
               title={isPinned ? 'Fijada' : 'Fijar nota'}
             >
@@ -340,7 +331,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
               className={`p-2 rounded-2xl transition flex items-center gap-1 text-xs font-semibold ${
                 isEncrypted
                   ? 'bg-amber-500 text-white shadow-sm'
-                  : 'text-stone-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-zinc-800'
+                  : 'text-slate-500 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-slate-800'
               }`}
               title="Cifrar nota con E2EE"
             >
@@ -358,8 +349,8 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
               }}
               className={`p-2 rounded-2xl transition ${
                 isArchived
-                  ? 'bg-emerald-600 text-white'
-                  : 'text-stone-500 hover:text-stone-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
               }`}
               title={isArchived ? 'Archivada' : 'Archivar'}
             >
@@ -369,14 +360,13 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
 
           {/* Mode Switchers & Actions */}
           <div className="flex items-center gap-1.5 sm:gap-2">
-            {/* Markdown View Toggle (Edit / Split / Preview) */}
             <div className="flex items-center bg-black/5 dark:bg-white/5 p-1 rounded-2xl border border-black/5 dark:border-white/5">
               <button
                 onClick={() => setEditorMode('edit')}
                 className={`p-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 transition ${
                   editorMode === 'edit'
-                    ? 'bg-white dark:bg-zinc-800 text-emerald-600 shadow-sm'
-                    : 'text-stone-500 hover:text-stone-900 dark:hover:text-stone-200'
+                    ? 'bg-white dark:bg-slate-800 text-blue-500 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
                 title="Modo Editor"
               >
@@ -388,8 +378,8 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 onClick={() => setEditorMode('split')}
                 className={`hidden md:flex p-1.5 rounded-xl text-xs font-semibold items-center gap-1 transition ${
                   editorMode === 'split'
-                    ? 'bg-white dark:bg-zinc-800 text-emerald-600 shadow-sm'
-                    : 'text-stone-500 hover:text-stone-900 dark:hover:text-stone-200'
+                    ? 'bg-white dark:bg-slate-800 text-blue-500 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
                 title="Vista Dividida"
               >
@@ -401,8 +391,8 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 onClick={() => setEditorMode('preview')}
                 className={`p-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 transition ${
                   editorMode === 'preview'
-                    ? 'bg-white dark:bg-zinc-800 text-emerald-600 shadow-sm'
-                    : 'text-stone-500 hover:text-stone-900 dark:hover:text-stone-200'
+                    ? 'bg-white dark:bg-slate-800 text-blue-500 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
                 title="Vista Previa Markdown"
               >
@@ -411,10 +401,9 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
               </button>
             </div>
 
-            {/* Save & Close buttons */}
             <button
               onClick={handleSaveNote}
-              className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs sm:text-sm font-bold rounded-2xl shadow-md transition"
+              className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 active:scale-95 text-white text-xs sm:text-sm font-bold rounded-2xl shadow-md shadow-blue-600/20 transition"
             >
               <Check className="w-4 h-4" />
               <span>Guardar</span>
@@ -422,7 +411,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
 
             <button
               onClick={onClose}
-              className="p-2 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition"
+              className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition"
             >
               <X className="w-5 h-5" />
             </button>
@@ -432,13 +421,13 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
         {/* LOCKED ENCRYPTED OVERLAY IF NOT DECRYPTED */}
         {note?.isEncrypted && !isDecryptedForEditing ? (
           <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-4">
-            <div className="w-16 h-16 rounded-3xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center shadow-lg">
+            <div className="w-16 h-16 rounded-3xl bg-amber-100 dark:bg-amber-950/60 text-amber-500 flex items-center justify-center shadow-lg">
               <Lock className="w-8 h-8" />
             </div>
             <div className="max-w-sm">
               <h3 className="text-lg font-bold">Nota Cifrada con AES-256</h3>
-              <p className="text-xs text-stone-500 dark:text-zinc-400 mt-1">
-                Ingresa tu contraseña para descifrar y ver el contenido:
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Ingresa tu contraseña para descifrar y ver el contenido en Aihnoa Notes:
               </p>
             </div>
 
@@ -448,14 +437,14 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 value={decryptPassword}
                 onChange={(e) => setDecryptPassword(e.target.value)}
                 placeholder="Contraseña de la nota"
-                className="w-full px-4 py-2.5 rounded-2xl bg-stone-100 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-700 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-blue-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {decryptError && (
                 <p className="text-xs text-red-500 font-semibold">{decryptError}</p>
               )}
               <button
                 onClick={handleManualDecrypt}
-                className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-2xl shadow-md transition flex items-center justify-center gap-2"
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-2xl shadow-md transition flex items-center justify-center gap-2"
               >
                 <Unlock className="w-4 h-4" />
                 Descifrar para Editar
@@ -464,14 +453,14 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
           </div>
         ) : (
           <>
-            {/* SUB-NAV TABS: NOTA (MARKDOWN), CHECKLIST (TAREAS), MULTIMEDIA */}
+            {/* SUB-NAV TABS */}
             <div className="flex items-center px-4 sm:px-6 pt-2 border-b border-black/5 dark:border-white/5 gap-2 bg-black/[0.02] dark:bg-white/[0.02]">
               <button
                 onClick={() => setActiveTab('content')}
                 className={`pb-2 px-3 text-xs font-bold border-b-2 transition flex items-center gap-1.5 ${
                   activeTab === 'content'
-                    ? 'border-emerald-600 text-emerald-600'
-                    : 'border-transparent text-stone-500 hover:text-stone-800 dark:hover:text-stone-200'
+                    ? 'border-blue-600 text-blue-600 dark:text-cyan-400'
+                    : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
                 <Edit3 className="w-3.5 h-3.5" />
@@ -482,8 +471,8 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 onClick={() => setActiveTab('todos')}
                 className={`pb-2 px-3 text-xs font-bold border-b-2 transition flex items-center gap-1.5 ${
                   activeTab === 'todos'
-                    ? 'border-emerald-600 text-emerald-600'
-                    : 'border-transparent text-stone-500 hover:text-stone-800 dark:hover:text-stone-200'
+                    ? 'border-blue-600 text-blue-600 dark:text-cyan-400'
+                    : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
                 <CheckSquare className="w-3.5 h-3.5" />
@@ -494,21 +483,21 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 onClick={() => setActiveTab('media')}
                 className={`pb-2 px-3 text-xs font-bold border-b-2 transition flex items-center gap-1.5 ${
                   activeTab === 'media'
-                    ? 'border-emerald-600 text-emerald-600'
-                    : 'border-transparent text-stone-500 hover:text-stone-800 dark:hover:text-stone-200'
+                    ? 'border-blue-600 text-blue-600 dark:text-cyan-400'
+                    : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
                 <Mic className="w-3.5 h-3.5" />
                 Voz & Dibujos
                 {(audioData || drawingData || attachments.length > 0) && (
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span className="w-2 h-2 rounded-full bg-cyan-400" />
                 )}
               </button>
             </div>
 
-            {/* MARKDOWN FORMATTING TOOLBAR (Visible in Content tab when editing) */}
+            {/* MARKDOWN FORMATTING TOOLBAR */}
             {activeTab === 'content' && editorMode !== 'preview' && (
-              <div className="p-2 sm:px-6 border-b border-black/5 dark:border-white/5 flex items-center gap-1 overflow-x-auto text-stone-600 dark:text-stone-300">
+              <div className="p-2 sm:px-6 border-b border-black/5 dark:border-white/5 flex items-center gap-1 overflow-x-auto text-slate-600 dark:text-slate-300">
                 <button
                   type="button"
                   onClick={() => insertMarkdown('# ', '', 'Título Principal')}
@@ -534,7 +523,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                   <Heading3 className="w-4 h-4" />
                 </button>
 
-                <div className="h-4 w-px bg-stone-300 dark:bg-zinc-700 mx-1" />
+                <div className="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-1" />
 
                 <button
                   type="button"
@@ -563,13 +552,13 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 <button
                   type="button"
                   onClick={() => insertMarkdown('==', '==', 'resaltado')}
-                  className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition text-amber-500"
+                  className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition text-cyan-400"
                   title="Resaltado (==)"
                 >
                   <Highlighter className="w-4 h-4" />
                 </button>
 
-                <div className="h-4 w-px bg-stone-300 dark:bg-zinc-700 mx-1" />
+                <div className="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-1" />
 
                 <button
                   type="button"
@@ -577,7 +566,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                   className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition"
                   title="Casilla de verificación (- [ ])"
                 >
-                  <CheckSquare className="w-4 h-4 text-emerald-600" />
+                  <CheckSquare className="w-4 h-4 text-blue-500" />
                 </button>
                 <button
                   type="button"
@@ -597,19 +586,19 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 </button>
                 <button
                   type="button"
-                  onClick={() => insertMarkdown('> ', '', 'Cita importante')}
+                  onClick={() => insertMarkdown('> ', '', 'Cita tech')}
                   className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition"
                   title="Cita (>)"
                 >
                   <Quote className="w-4 h-4" />
                 </button>
 
-                <div className="h-4 w-px bg-stone-300 dark:bg-zinc-700 mx-1" />
+                <div className="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-1" />
 
                 <button
                   type="button"
                   onClick={() => insertMarkdown('`', '`', 'código')}
-                  className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 font-mono transition"
+                  className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 font-mono transition text-cyan-400"
                   title="Código en línea (`)"
                 >
                   <Code className="w-4 h-4" />
@@ -617,7 +606,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 <button
                   type="button"
                   onClick={() => insertMarkdown('```\n', '\n```', '// Código')}
-                  className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-xs font-mono transition"
+                  className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-xs font-mono transition text-blue-500"
                   title="Bloque de código (```)"
                 >
                   {'```'}
@@ -626,7 +615,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                   type="button"
                   onClick={() =>
                     insertMarkdown(
-                      '\n| Columna 1 | Columna 2 |\n| --- | --- |\n| Dato 1 | Dato 2 |\n'
+                      '\n| Característica | Detalle |\n| --- | --- |\n| Parámetro 1 | Valor 1 |\n'
                     )
                   }
                   className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition"
@@ -636,7 +625,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 </button>
                 <button
                   type="button"
-                  onClick={() => insertMarkdown('[', '](https://ejemplo.com)', 'Texto del enlace')}
+                  onClick={() => insertMarkdown('[', '](https://aihnoa.cloud)', 'Enlace')}
                   className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition"
                   title="Insertar enlace"
                 >
@@ -645,7 +634,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 <button
                   type="button"
                   onClick={() => insertMarkdown('#', '', 'etiqueta')}
-                  className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition text-emerald-600"
+                  className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition text-blue-500"
                   title="Añadir Hashtag"
                 >
                   <Tag className="w-4 h-4" />
@@ -655,13 +644,12 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
 
             {/* MAIN CONTENT AREA */}
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col">
-              {/* Note Title Input */}
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Título de la nota..."
-                className="w-full text-xl sm:text-2xl font-bold bg-transparent border-none focus:outline-none placeholder:text-stone-400 dark:placeholder:text-zinc-600 mb-3"
+                className="w-full text-xl sm:text-2xl font-bold bg-transparent border-none focus:outline-none placeholder:text-slate-400 dark:placeholder:text-slate-600 mb-3"
               />
 
               {/* TAB 1: MARKDOWN CONTENT */}
@@ -673,12 +661,12 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
                       placeholder="Escribe en Markdown aquí... (usa **negrita**, - viñetas, ```código, #etiquetas)"
-                      className="w-full flex-1 bg-transparent border-none focus:outline-none resize-none font-mono text-sm leading-relaxed placeholder:text-stone-400 dark:placeholder:text-zinc-600"
+                      className="w-full flex-1 bg-transparent border-none focus:outline-none resize-none font-mono text-sm leading-relaxed placeholder:text-slate-400 dark:placeholder:text-slate-600"
                     />
                   )}
 
                   {editorMode === 'preview' && (
-                    <div className="flex-1 overflow-y-auto p-2 rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
+                    <div className="flex-1 overflow-y-auto p-3 rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5">
                       <MarkdownRenderer
                         content={content}
                         interactiveTasks={true}
@@ -709,9 +697,8 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
               {/* TAB 2: TODOS / CHECKLISTS */}
               {activeTab === 'todos' && (
                 <div className="flex-1 flex flex-col space-y-4">
-                  {/* Add todo input */}
                   <div className="flex items-center gap-2 p-1.5 bg-black/5 dark:bg-white/5 rounded-2xl border border-black/5 dark:border-white/5">
-                    <Plus className="w-5 h-5 text-emerald-600 ml-2" />
+                    <Plus className="w-5 h-5 text-blue-500 ml-2" />
                     <input
                       type="text"
                       value={newTodoText}
@@ -728,16 +715,15 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                     <button
                       type="button"
                       onClick={handleAddTodo}
-                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm transition"
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm transition"
                     >
                       Añadir
                     </button>
                   </div>
 
-                  {/* Todo list items */}
                   <div className="flex-1 overflow-y-auto space-y-2">
                     {todos.length === 0 ? (
-                      <div className="text-center py-12 text-stone-400 dark:text-zinc-500 text-xs">
+                      <div className="text-center py-12 text-slate-400 dark:text-slate-500 text-xs">
                         No hay tareas en esta nota aún. ¡Escribe arriba para añadir una!
                       </div>
                     ) : (
@@ -754,13 +740,13 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                               type="checkbox"
                               checked={todo.completed}
                               onChange={() => {}}
-                              className="h-4 w-4 rounded border-stone-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                              className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
                             />
                             <span
                               className={`text-xs sm:text-sm transition ${
                                 todo.completed
-                                  ? 'line-through text-stone-400 dark:text-zinc-500'
-                                  : 'text-stone-800 dark:text-stone-200 font-medium'
+                                  ? 'line-through text-slate-400 dark:text-slate-500'
+                                  : 'text-slate-800 dark:text-slate-200 font-medium'
                               }`}
                             >
                               {todo.text}
@@ -769,7 +755,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                           <button
                             type="button"
                             onClick={() => handleRemoveTodoItem(todo.id)}
-                            className="p-1 text-stone-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition"
+                            className="p-1 text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition"
                           >
                             <X className="w-4 h-4" />
                           </button>
@@ -780,15 +766,14 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 </div>
               )}
 
-              {/* TAB 3: MEDIA (VOZ, DIBUJOS, ADJUNTOS) */}
+              {/* TAB 3: MEDIA */}
               {activeTab === 'media' && (
                 <div className="flex-1 flex flex-col space-y-6">
-                  {/* Action buttons */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <button
                       type="button"
                       onClick={() => setShowVoiceRecorder(true)}
-                      className="p-4 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 flex flex-col items-center justify-center gap-2 text-emerald-700 dark:text-emerald-300 transition"
+                      className="p-4 rounded-2xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 flex flex-col items-center justify-center gap-2 text-cyan-600 dark:text-cyan-300 transition"
                     >
                       <Mic className="w-6 h-6" />
                       <span className="text-xs font-bold">Grabar Nota de Voz</span>
@@ -797,7 +782,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                     <button
                       type="button"
                       onClick={() => setShowDrawingModal(true)}
-                      className="p-4 rounded-2xl bg-violet-500/10 hover:bg-violet-500/20 border border-violet-500/20 flex flex-col items-center justify-center gap-2 text-violet-700 dark:text-violet-300 transition"
+                      className="p-4 rounded-2xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 flex flex-col items-center justify-center gap-2 text-indigo-600 dark:text-indigo-300 transition"
                     >
                       <PenTool className="w-6 h-6" />
                       <span className="text-xs font-bold">Lienzo de Dibujo</span>
@@ -806,7 +791,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="p-4 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/20 flex flex-col items-center justify-center gap-2 text-sky-700 dark:text-sky-300 transition"
+                      className="p-4 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 flex flex-col items-center justify-center gap-2 text-blue-600 dark:text-blue-300 transition"
                     >
                       <ImageIcon className="w-6 h-6" />
                       <span className="text-xs font-bold">Adjuntar Imagen</span>
@@ -825,9 +810,9 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                   {audioData && (
                     <div className="p-4 bg-black/[0.03] dark:bg-white/[0.04] rounded-2xl border border-black/5 dark:border-white/5 space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold flex items-center gap-1.5 text-emerald-600">
+                        <span className="text-xs font-bold flex items-center gap-1.5 text-cyan-500">
                           <Mic className="w-4 h-4" />
-                          Nota de voz adjunta ({audioDuration || 0}s)
+                          Nota de voz ({audioDuration || 0}s)
                         </span>
                         <button
                           onClick={() => {
@@ -842,7 +827,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                       </div>
                       <audio controls src={audioData} className="w-full h-9" />
                       {audioTranscript && (
-                        <p className="text-xs text-stone-600 dark:text-stone-400 italic bg-white/50 dark:bg-zinc-800/50 p-2 rounded-xl">
+                        <p className="text-xs text-slate-600 dark:text-slate-400 italic bg-white/50 dark:bg-slate-800/50 p-2 rounded-xl">
                           "{audioTranscript}"
                         </p>
                       )}
@@ -853,14 +838,14 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                   {drawingData && (
                     <div className="p-4 bg-black/[0.03] dark:bg-white/[0.04] rounded-2xl border border-black/5 dark:border-white/5 space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold flex items-center gap-1.5 text-violet-600">
+                        <span className="text-xs font-bold flex items-center gap-1.5 text-indigo-500">
                           <PenTool className="w-4 h-4" />
-                          Boceto / Dibujo a mano alzada
+                          Boceto / Dibujo
                         </span>
                         <div className="flex items-center gap-3">
                           <button
                             onClick={() => setShowDrawingModal(true)}
-                            className="text-xs text-violet-600 hover:underline"
+                            className="text-xs text-indigo-500 hover:underline"
                           >
                             Editar
                           </button>
@@ -881,14 +866,14 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                   {/* Image attachments list */}
                   {attachments.length > 0 && (
                     <div className="space-y-2">
-                      <span className="text-xs font-bold text-stone-600 dark:text-stone-300">
+                      <span className="text-xs font-bold text-slate-600 dark:text-slate-300">
                         Imágenes adjuntas ({attachments.length}):
                       </span>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                         {attachments.map((att) => (
                           <div
                             key={att.id}
-                            className="relative group rounded-2xl overflow-hidden border border-stone-200 dark:border-zinc-700 bg-white"
+                            className="relative group rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-white"
                           >
                             <img
                               src={att.dataUrl}
@@ -911,18 +896,18 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 </div>
               )}
 
-              {/* Tags display & quick add pill row */}
+              {/* Tags display */}
               <div className="mt-4 pt-3 border-t border-black/5 dark:border-white/5 flex flex-wrap items-center gap-1.5">
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-black/5 dark:bg-white/10 text-stone-700 dark:text-stone-300"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100/80 dark:bg-blue-950/80 text-blue-700 dark:text-cyan-300 border border-blue-200/50 dark:border-blue-800/40"
                   >
                     #{tag}
                     <button
                       type="button"
                       onClick={() => handleRemoveTag(tag)}
-                      className="hover:text-red-500"
+                      className="hover:text-red-500 ml-0.5"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -941,13 +926,13 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                       }
                     }}
                     placeholder="+ Etiqueta"
-                    className="px-2 py-0.5 text-xs bg-transparent border border-dashed border-stone-300 dark:border-zinc-700 rounded-full focus:outline-none focus:border-emerald-500 w-24"
+                    className="px-2.5 py-0.5 text-xs bg-transparent border border-dashed border-slate-300 dark:border-blue-900 rounded-full focus:outline-none focus:border-blue-500 w-24"
                   />
                   {tagInput.trim() && (
                     <button
                       type="button"
                       onClick={handleAddTag}
-                      className="p-1 rounded-full bg-emerald-600 text-white text-[10px]"
+                      className="p-1 rounded-full bg-blue-600 text-white text-[10px]"
                     >
                       <Check className="w-3 h-3" />
                     </button>
@@ -957,22 +942,21 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
             </div>
 
             {/* BOTTOM BAR: PALETTE, REMINDER, STATS */}
-            <div className="p-3 sm:px-6 bg-black/[0.02] dark:bg-white/[0.02] border-t border-black/5 dark:border-white/10 flex items-center justify-between text-xs text-stone-500 dark:text-zinc-400">
+            <div className="p-3 sm:px-6 bg-black/[0.02] dark:bg-white/[0.02] border-t border-black/5 dark:border-white/10 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
               <div className="flex items-center gap-2">
-                {/* Color picker dropdown */}
                 <div className="relative">
                   <button
                     type="button"
                     onClick={() => setShowColorPicker(!showColorPicker)}
-                    className="p-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-1.5 transition"
+                    className="p-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 flex items-center gap-1.5 transition text-blue-500"
                     title="Color de la tarjeta"
                   >
-                    <Palette className="w-4 h-4 text-emerald-600" />
-                    <span className="hidden sm:inline">Color</span>
+                    <Palette className="w-4 h-4" />
+                    <span className="hidden sm:inline font-semibold">Color</span>
                   </button>
 
                   {showColorPicker && (
-                    <div className="absolute bottom-10 left-0 z-30 p-2.5 bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 rounded-2xl shadow-xl grid grid-cols-7 gap-1.5 animate-in zoom-in-95">
+                    <div className="absolute bottom-10 left-0 z-30 p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-blue-900 rounded-2xl shadow-xl grid grid-cols-7 gap-1.5 animate-in zoom-in-95">
                       {(Object.keys(NOTE_COLORS) as NoteColor[]).map((c) => (
                         <button
                           key={c}
@@ -981,8 +965,8 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                             setColor(c);
                             setShowColorPicker(false);
                           }}
-                          className={`w-6 h-6 rounded-full border border-stone-300 dark:border-zinc-700 transition ${
-                            color === c ? 'ring-2 ring-emerald-500 scale-110' : ''
+                          className={`w-6 h-6 rounded-full border border-slate-300 dark:border-slate-700 transition ${
+                            color === c ? 'ring-2 ring-blue-500 scale-110' : ''
                           }`}
                           style={{ backgroundColor: NOTE_COLORS[c].dotColor }}
                           title={NOTE_COLORS[c].name}
@@ -992,14 +976,13 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                   )}
                 </div>
 
-                {/* Reminder button */}
                 <div className="relative">
                   <button
                     type="button"
                     onClick={() => setShowReminderPicker(!showReminderPicker)}
                     className={`p-2 rounded-xl flex items-center gap-1.5 transition ${
                       reminder
-                        ? 'bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 font-semibold'
+                        ? 'bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-cyan-300 font-semibold'
                         : 'hover:bg-black/5 dark:hover:bg-white/5'
                     }`}
                   >
@@ -1010,8 +993,8 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                   </button>
 
                   {showReminderPicker && (
-                    <div className="absolute bottom-10 left-0 z-30 p-3 bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 rounded-2xl shadow-xl w-64 space-y-2 text-xs animate-in zoom-in-95">
-                      <p className="font-bold text-stone-800 dark:text-stone-200">
+                    <div className="absolute bottom-10 left-0 z-30 p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-blue-900 rounded-2xl shadow-xl w-64 space-y-2 text-xs animate-in zoom-in-95">
+                      <p className="font-bold text-slate-800 dark:text-slate-200">
                         Configurar Recordatorio:
                       </p>
                       <button
@@ -1022,7 +1005,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                           setReminder(todayEvening.toISOString());
                           setShowReminderPicker(false);
                         }}
-                        className="w-full text-left p-2 rounded-xl hover:bg-stone-100 dark:hover:bg-zinc-800"
+                        className="w-full text-left p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800"
                       >
                         Hoy más tarde (18:00)
                       </button>
@@ -1035,7 +1018,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                           setReminder(tomorrow.toISOString());
                           setShowReminderPicker(false);
                         }}
-                        className="w-full text-left p-2 rounded-xl hover:bg-stone-100 dark:hover:bg-zinc-800"
+                        className="w-full text-left p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800"
                       >
                         Mañana por la mañana (09:00)
                       </button>
@@ -1043,7 +1026,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                         type="datetime-local"
                         value={reminder ? reminder.slice(0, 16) : ''}
                         onChange={(e) => setReminder(new Date(e.target.value).toISOString())}
-                        className="w-full p-2 bg-stone-100 dark:bg-zinc-800 rounded-xl border border-stone-200 dark:border-zinc-700 text-xs"
+                        className="w-full p-2 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-xs"
                       />
                       {reminder && (
                         <button
@@ -1066,7 +1049,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
               <div className="flex items-center gap-3 font-mono text-[11px]">
                 <span>{wordCount} palabras</span>
                 <span>•</span>
-                <span>{charCount} caracteres</span>
+                <span>{charCount} car.</span>
                 <span>•</span>
                 <span>~{readTimeMin} min</span>
               </div>
@@ -1075,7 +1058,6 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
         )}
       </div>
 
-      {/* Voice Recorder Modal Child */}
       <VoiceRecorderModal
         isOpen={showVoiceRecorder}
         onClose={() => setShowVoiceRecorder(false)}
@@ -1089,7 +1071,6 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
         }}
       />
 
-      {/* Drawing Modal Child */}
       <DrawingModal
         isOpen={showDrawingModal}
         initialDataUrl={drawingData}
